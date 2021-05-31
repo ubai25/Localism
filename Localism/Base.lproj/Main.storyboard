@@ -30,7 +30,14 @@
                             <outlet property="delegate" destination="9hQ-LE-s4f" id="gss-Iz-pIo"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Localism" id="961-I6-ZT5"/>
+                    <navigationItem key="navigationItem" title="Localism" id="961-I6-ZT5">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="kvC-aE-2YU">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="addButton:" destination="9hQ-LE-s4f" id="2xR-yh-rE7"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nlW-Ws-rJH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

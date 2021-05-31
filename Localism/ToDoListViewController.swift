@@ -6,13 +6,19 @@
 //
 
 import UIKit
+//import SVProgressHUD
 
 class ToDoListViewController : UITableViewController {
     
-    let dummyArray = ["sholat shubuh", "olahraga", "sarapan", "mandi"]
+    var dummyArray = ["sholat shubuh", "olahraga", "sarapan", "mandi"]
+    let defaults = UserDefaults.standard
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let items = defaults.array(forKey: "ToDoDatas") as? [String] {
+            dummyArray = items
+        }
         // Do any additional setup after loading the view.
     }
     
@@ -37,6 +43,32 @@ class ToDoListViewController : UITableViewController {
         }
         
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    @IBAction func addButton(_ sender: Any) {
+        
+        var itemInput = UITextField()
+        
+        let alert = UIAlertController(title: "Add new Item", message: "kalo ada message gimana?", preferredStyle: .alert)
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let action = UIAlertAction(title: "Add New Item", style: .default) { (action) in
+            
+            if(itemInput.text! != ""){
+                self.dummyArray.append(itemInput.text!)
+                self.defaults.set(self.dummyArray, forKey: "ToDoDatas")
+                self.tableView.reloadData()
+            }
+        }
+        
+        alert.addTextField { uiTextField in
+            uiTextField.placeholder = "Create new Item"
+            itemInput = uiTextField
+        }
+        
+        alert.addAction(action)
+        alert.addAction(cancel)
+        
+        present(alert, animated: true, completion: nil)
     }
 }
 
