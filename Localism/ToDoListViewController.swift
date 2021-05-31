@@ -10,6 +10,8 @@ import UIKit
 
 class ToDoListViewController : UITableViewController {
     
+    //write some comment
+    
     var dummyArray = ["sholat shubuh", "olahraga", "sarapan", "mandi"]
     let defaults = UserDefaults.standard
 
