@@ -6,7 +6,7 @@
 //
 import Foundation
 
-class ItemModel {
+class ItemModel : Codable {
     
     var text : String = ""
     var done : Bool = false
