@@ -11,8 +11,8 @@ import CoreData
 
 class ToDoListViewController : UITableViewController {
     
+    //Write the properties there
     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-    
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     var dataArray = [Item]()
