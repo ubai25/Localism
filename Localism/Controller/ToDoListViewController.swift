@@ -9,7 +9,7 @@ import UIKit
 import CoreData
 //import SVProgressHUD
 
-class ToDoListViewController : UITableViewController {
+class ToDoListViewController : UITableViewController{
     
     //Write the properties there
     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
@@ -21,6 +21,7 @@ class ToDoListViewController : UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("file path : \(dataFilePath)")
+        
         loadDataItems()
     }
     
@@ -42,8 +43,16 @@ class ToDoListViewController : UITableViewController {
     
     //When List is pressed
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+
+        //delete data
+//        context.delete(dataArray[indexPath.row])
+//        dataArray.remove(at: indexPath.row)
+//
         dataArray[indexPath.row].done = !dataArray[indexPath.row].done
+        
+//        another way
+//        let item = dataArray[indexPath.row]
+//        item.setValue(false, forKey: "done")
         
         saveData()
 
@@ -96,13 +105,51 @@ class ToDoListViewController : UITableViewController {
         tableView.reloadData()
     }
     
-    func loadDataItems(){
-        let request : NSFetchRequest<Item> = Item.fetchRequest()
+    func loadDataItems(with request : NSFetchRequest<Item> = Item.fetchRequest()){
         
         do{
             dataArray = try context.fetch(request)
         }catch{
             print("Error when fetching data : \(error)")
+        }
+        
+        tableView.reloadData()
+    }
+}
+
+extension ToDoListViewController : UISearchBarDelegate{
+    
+//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+//
+//        print("Search pressed")
+//
+//        let request : NSFetchRequest<Item> = Item.fetchRequest()
+//
+//        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+//        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+//
+//        loadDataItems(with: request)
+//    }
+    
+//    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+//
+//    }
+//
+//    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+//
+//    }
+//
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        if(searchText.isEmpty){
+            loadDataItems()
+        }else{
+            let request : NSFetchRequest<Item> = Item.fetchRequest()
+
+            request.predicate  = NSPredicate(format: "title CONTAINS[cd] %@", searchText)
+            request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+
+            loadDataItems(with: request)
         }
     }
 }
