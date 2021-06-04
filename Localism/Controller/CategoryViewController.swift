@@ -108,7 +108,7 @@ class CategoryViewController: UITableViewController {
 //          do code
 //        }dst
         
-        let destinationVC = segue.description as! ToDoListViewController
+        let destinationVC = segue.destination as! ToDoListViewController
         
         if let indexPath = tableView.indexPathForSelectedRow{
             destinationVC.selectedCategory = dataArray[indexPath.row]
