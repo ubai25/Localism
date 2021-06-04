@@ -1,4 +1,4 @@
-//
+
 //  ViewController.swift
 //  Localism
 //
@@ -7,22 +7,23 @@
 
 import UIKit
 import CoreData
-//import SVProgressHUD
 
 class ToDoListViewController : UITableViewController{
     
     //Write the properties there
-    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     var dataArray = [Item]()
+    
+    var selectedCategory : Category?{
+        didSet{
+            loadDataItems()
+        }
+    }
 
     //First Load
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("file path : \(dataFilePath)")
-        
-        loadDataItems()
     }
     
     //How many cell / row
@@ -75,6 +76,7 @@ class ToDoListViewController : UITableViewController{
                 let newItem = Item(context: self.context)
                 newItem.title = itemInput.text!
                 newItem.done = false
+                newItem.parentCat = self.selectedCategory
                 
                 self.dataArray.append(newItem)
                 
@@ -105,7 +107,15 @@ class ToDoListViewController : UITableViewController{
         tableView.reloadData()
     }
     
-    func loadDataItems(with request : NSFetchRequest<Item> = Item.fetchRequest()){
+    func loadDataItems(with request : NSFetchRequest<Item> = Item.fetchRequest(), predicate : NSPredicate? = nil){
+        
+        let predicateCat = NSPredicate(format: "parentCat.name MATHES &@", selectedCategory!.name!)
+        
+        if let additionalPred = predicate{
+            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicateCat, additionalPred])
+        }else{
+            request.predicate = predicateCat
+        }
         
         do{
             dataArray = try context.fetch(request)
@@ -121,8 +131,6 @@ extension ToDoListViewController : UISearchBarDelegate{
     
 //    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
 //
-//        print("Search pressed")
-//
 //        let request : NSFetchRequest<Item> = Item.fetchRequest()
 //
 //        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
@@ -131,9 +139,13 @@ extension ToDoListViewController : UISearchBarDelegate{
 //        loadDataItems(with: request)
 //    }
     
-//    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-//
-//    }
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        if(searchBar.text!.isEmpty){
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+        }
+    }
 //
 //    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
 //
@@ -143,13 +155,15 @@ extension ToDoListViewController : UISearchBarDelegate{
         
         if(searchText.isEmpty){
             loadDataItems()
+            
+//            searchBar.endEditing(true)
         }else{
             let request : NSFetchRequest<Item> = Item.fetchRequest()
 
-            request.predicate  = NSPredicate(format: "title CONTAINS[cd] %@", searchText)
+            let predicate  = NSPredicate(format: "title CONTAINS[cd] %@", searchText)
             request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
 
-            loadDataItems(with: request)
+            loadDataItems(with: request, predicate: predicate)
         }
     }
 }

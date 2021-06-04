@@ -7,7 +7,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Localism-->
+        <!--Items-->
         <scene sceneID="O39-eh-Vte">
             <objects>
                 <tableViewController id="9hQ-LE-s4f" customClass="ToDoListViewController" customModule="Localism" customModuleProvider="target" sceneMemberID="viewController">
@@ -38,7 +38,7 @@
                             <outlet property="delegate" destination="9hQ-LE-s4f" id="gss-Iz-pIo"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Localism" id="961-I6-ZT5">
+                    <navigationItem key="navigationItem" title="Items" id="961-I6-ZT5">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="kvC-aE-2YU">
                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
@@ -49,7 +49,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nlW-Ws-rJH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="246" y="25"/>
+            <point key="canvasLocation" x="991" y="25"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Iy9-We-DIB">
@@ -67,12 +67,51 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="9hQ-LE-s4f" kind="relationship" relationship="rootViewController" id="GdY-mJ-OhQ"/>
+                        <segue destination="VIH-PC-XHH" kind="relationship" relationship="rootViewController" id="eBl-NM-jnU"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hDe-1c-SSY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-413.04347826086962" y="24.776785714285712"/>
+        </scene>
+        <!--Localism-->
+        <scene sceneID="Ylh-QG-w5R">
+            <objects>
+                <tableViewController id="VIH-PC-XHH" customClass="CategoryViewController" customModule="Localism" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Pwg-sL-Wjw">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="CategoryCell" id="xdj-bB-aIb">
+                                <rect key="frame" x="0.0" y="24.5" width="414" height="43.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="xdj-bB-aIb" id="IqD-HS-D5j">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="VIH-PC-XHH" id="ZKk-4n-793"/>
+                            <outlet property="delegate" destination="VIH-PC-XHH" id="YaM-8n-kzJ"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Localism" id="Emz-ZR-Qxk">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="pXi-f7-0rn">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="AddButton:" destination="VIH-PC-XHH" id="Cx4-x9-Q3K"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <segue destination="9hQ-LE-s4f" kind="show" identifier="goToItems" id="qRi-vO-l8w"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hdS-zh-uaF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="278" y="25"/>
         </scene>
     </scenes>
     <resources>
