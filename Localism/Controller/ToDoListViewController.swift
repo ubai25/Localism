@@ -106,7 +106,7 @@ class ToDoListViewController : UITableViewController{
     }
     
     func loadDataItems(){
-        dataResults = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
+        dataResults = selectedCategory?.items.sorted(byKeyPath: "date", ascending: true)
         tableView.reloadData()
     }
 }
@@ -123,32 +123,30 @@ extension ToDoListViewController : UISearchBarDelegate{
 //        loadDataItems(with: request)
 //    }
     
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        if(searchBar.text!.isEmpty){
-            DispatchQueue.main.async {
-                searchBar.resignFirstResponder()
-            }
-        }
-    }
+//    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+//        if(searchBar.text!.isEmpty){
+//            DispatchQueue.main.async {
+//                searchBar.resignFirstResponder()
+//            }
+//        }
+//    }
+    
 //
 //    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
 //
 //    }
 //
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//
-//        if(searchText.isEmpty){
-//            loadDataItems()
-//
-////            searchBar.endEditing(true)
-//        }else{
-//            let request : NSFetchRequest<Item> = Item.fetchRequest()
-//
-//            let predicate  = NSPredicate(format: "title CONTAINS[cd] %@", searchText)
-//            request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-//
-//            loadDataItems(with: request, predicate: predicate)
-//        }
-//    }
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+
+        if(searchText.isEmpty){
+            loadDataItems()
+
+        }else{
+            dataResults = dataResults?.filter("title CONTAINS[cd] %@", searchText)
+                .sorted(byKeyPath: "date", ascending: true)
+            
+            tableView.reloadData()
+        }
+    }
 }
 
