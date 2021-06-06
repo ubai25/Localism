@@ -7,5 +7,6 @@ target 'Localism' do
   # Pods for Localism
   
 pod 'RealmSwift'
+pod 'SwipeCellKit'
 
 end
