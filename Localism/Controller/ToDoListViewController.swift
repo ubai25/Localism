@@ -8,7 +8,7 @@
 import UIKit
 import RealmSwift
 
-class ToDoListViewController : UITableViewController{
+class ToDoListViewController : ParentTableViewController{
     
     //Write the properties there
     var dataResults: Results<Item>?
@@ -33,7 +33,7 @@ class ToDoListViewController : UITableViewController{
     //Custom for every cell
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "toDoItemCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         if let data = dataResults?[indexPath.row]{
             cell.textLabel?.text = data.title
@@ -108,6 +108,18 @@ class ToDoListViewController : UITableViewController{
     func loadDataItems(){
         dataResults = selectedCategory?.items.sorted(byKeyPath: "date", ascending: true)
         tableView.reloadData()
+    }
+    
+    override func deleteItem(at indexPath: IndexPath){
+        if let item4delete = self.dataResults?[indexPath.row]{
+            do{
+                try self.realm.write{
+                    self.realm.delete(item4delete)
+                }
+            }catch{
+                print("Error saving context : \(error)")
+            }
+        }
     }
 }
 

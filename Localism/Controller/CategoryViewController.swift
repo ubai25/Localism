@@ -7,9 +7,8 @@
 
 import UIKit
 import RealmSwift
-import SwipeCellKit
 
-class CategoryViewController: UITableViewController{
+class CategoryViewController: ParentTableViewController{
     
     let realm = try! Realm()
     
@@ -23,19 +22,18 @@ class CategoryViewController: UITableViewController{
         loadCategory()
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        categoryResults?.count ?? 1
-    }
-    
     //MARK: - TableView Datasource Methoods
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath) as! SwipeTableViewCell
-        cell.textLabel?.text = categoryResults?[indexPath.row].name ?? "No Categories added yet"
-        
-        cell.delegate = self
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        cell.textLabel?.text = categoryResults?[indexPath.row].name
                 
         return cell
+    }
+
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        categoryResults?.count ?? 1
     }
 
     //MARK: - Add New Categories
@@ -106,37 +104,15 @@ class CategoryViewController: UITableViewController{
         
     }
     
-    
-}
-
-extension CategoryViewController: SwipeTableViewCellDelegate{
-    
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
-        guard orientation == .right else { return nil }
-
-        let deleteAction = SwipeAction(style: .destructive, title: nil) { action, indexPath in
-            
-            if let cat4delete = self.categoryResults?[indexPath.row]{
-                do{
-                    try self.realm.write{
-                        self.realm.delete(cat4delete)
-                    }
-                }catch{
-                    print("Error saving context : \(error)")
+    override func deleteItem(at indexPath: IndexPath){
+        if let cat4delete = self.categoryResults?[indexPath.row]{
+            do{
+                try self.realm.write{
+                    self.realm.delete(cat4delete)
                 }
+            }catch{
+                print("Error saving context : \(error)")
             }
         }
-
-        // customize the action appearance
-        deleteAction.image = UIImage.init(named: "trash_Icon")
-
-        return [deleteAction]
     }
-    
-    func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
-        var options = SwipeOptions()
-        options.expansionStyle = .destructive
-        return options
-    }
-    
 }
