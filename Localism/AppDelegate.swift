@@ -13,10 +13,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        var configuration = Realm.Configuration(
-            schemaVersion: 1,
+        let configuration = Realm.Configuration(
+            schemaVersion: 2,
             migrationBlock: { migration, oldSchemaVersion in
-                if oldSchemaVersion < 1 {
+                if oldSchemaVersion < 2 {
 
                     // if just the name of your model's property changed you can do this
     //                migration.renameProperty(onType: NotSureItem.className(), from: "text", to: "title")

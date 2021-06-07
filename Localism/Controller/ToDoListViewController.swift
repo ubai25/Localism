@@ -7,12 +7,16 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
 class ToDoListViewController : ParentTableViewController{
     
     //Write the properties there
     var dataResults: Results<Item>?
     let realm = try! Realm()
+    var cellColor = FlatSkyBlue().flatten().hexValue()
+    
+    @IBOutlet weak var searcBar: UISearchBar!
     
     var selectedCategory: Category?{
         didSet{
@@ -23,6 +27,29 @@ class ToDoListViewController : ParentTableViewController{
     //First Load
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tableView.separatorStyle = .none
+        tableView.rowHeight = 60
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        if let color = selectedCategory?.rowColor{
+            
+            guard let navbar = navigationController?.navigationBar else {
+                fatalError("NavBar Does not exist")
+            }
+            
+            title = selectedCategory?.name
+//            navbar.barTintColor = UIColor(hexString: color)
+            navbar.backgroundColor = UIColor(hexString: color)
+            navbar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: ContrastColorOf(UIColor(hexString: color)!, returnFlat: true)]
+            navbar.tintColor = ContrastColorOf(UIColor(hexString: color)!, returnFlat: true)
+            
+            searcBar.barTintColor = UIColor(hexString: color)?.lighten(byPercentage: 0.5)
+//            searcBar.tintColor = ContrastColorOf(UIColor(hexString: color)!, returnFlat: true)
+//            searcBar.backgroundColor = UIColor(hexString: color)
+        }
     }
     
     //How many cell / row
@@ -38,6 +65,12 @@ class ToDoListViewController : ParentTableViewController{
         if let data = dataResults?[indexPath.row]{
             cell.textLabel?.text = data.title
             cell.accessoryType = data.done ? .checkmark : .none
+            
+            if let color = UIColor.init(hexString: cellColor)?.darken(
+                byPercentage: CGFloat(indexPath.row) / (CGFloat(dataResults!.count) * CGFloat(1.5))){
+                cell.backgroundColor = color
+                cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
+            }
         }else{
             cell.textLabel?.text = "No Items Added"
         }
@@ -75,14 +108,12 @@ class ToDoListViewController : ParentTableViewController{
             
             if(itemInput.text! != ""){
                 if let category = self.selectedCategory{
-                    print("category not null")
                     do{
                         try self.realm.write{
                             let newItem = Item()
                             newItem.title = itemInput.text!
                             category.items.append(newItem)
                         }
-                        print("Data Saved Successfuly")
                     }catch{
                         print("Error saving context : \(error)")
                     }
@@ -148,6 +179,7 @@ extension ToDoListViewController : UISearchBarDelegate{
 //
 //    }
 //
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
 
         if(searchText.isEmpty){

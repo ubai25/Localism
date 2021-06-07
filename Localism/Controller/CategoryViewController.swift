@@ -7,19 +7,33 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
 class CategoryViewController: ParentTableViewController{
     
     let realm = try! Realm()
+    let color = FlatSkyBlue()
     
     var categoryResults : Results<Category>?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.rowHeight = 50
+        tableView.separatorStyle = .none
+        tableView.rowHeight = 60
         
         loadCategory()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        guard let navbar = navigationController?.navigationBar else {
+            fatalError("NavBar Does not exist")
+        }
+        
+//        navbar.barTintColor = FlatMint()
+        navbar.backgroundColor = color
+        navbar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: ContrastColorOf(color, returnFlat: true)]
+        navbar.tintColor = ContrastColorOf(color, returnFlat: true)
     }
     
     //MARK: - TableView Datasource Methoods
@@ -27,7 +41,15 @@ class CategoryViewController: ParentTableViewController{
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        cell.textLabel?.text = categoryResults?[indexPath.row].name
+        
+        if let category = categoryResults?[indexPath.row]{
+            cell.textLabel?.text = category.name
+            
+            if let color = UIColor.init(hexString: category.rowColor){
+                cell.backgroundColor = color
+                cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
+            }
+        }
                 
         return cell
     }
@@ -52,6 +74,7 @@ class CategoryViewController: ParentTableViewController{
                 
                 let newCategory = Category()
                 newCategory.name = itemInput.text!
+                newCategory.rowColor = UIColor.randomFlat().hexValue()
                 
                 self.saveData(category: newCategory)
             }
@@ -92,6 +115,7 @@ class CategoryViewController: ParentTableViewController{
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         performSegue(withIdentifier: "goToItems", sender: self)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -100,6 +124,7 @@ class CategoryViewController: ParentTableViewController{
         
         if let indexPath = tableView.indexPathForSelectedRow{
             destinationVC.selectedCategory = categoryResults?[indexPath.row]
+            destinationVC.cellColor = (categoryResults?[indexPath.row].rowColor)!
         }
         
     }
@@ -108,6 +133,7 @@ class CategoryViewController: ParentTableViewController{
         if let cat4delete = self.categoryResults?[indexPath.row]{
             do{
                 try self.realm.write{
+                    self.realm.delete(cat4delete.items)
                     self.realm.delete(cat4delete)
                 }
             }catch{
